@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+</head>
+<body>
+    <h1>Signup </h1>
+    <form>
+        <input type="text" name="username" placeholder="username" required>
+        <input type="password" name="password" placeholder="password" required>
+        <button>Signup</button>
+    </form>
+
+    <script>
+        
+        document.querySelector('form').onsubmit = async (event) => {
+            event.preventDefault();
+            const packet = {
+                username: document.querySelector('input[name="username"]').value,
+                password: document.querySelector('input[name="password"]').value
+            }
+
+            let res = await fetch(document.URL,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(packet)
+            });
+
+            let text = await res.text();
+
+            alert(text);
+
+            document.querySelector('input[name="username"]').value = '';
+            document.querySelector('input[name="password"]').value = '';
+
+            
+        };
+        
+
+
+
+    </script>
+</body>
+</html>
