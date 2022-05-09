@@ -6,25 +6,25 @@ const maxAgeForJWTInSec = 3* 24 * 60 * 60;  //Equivalent to 3 days
 
 function generateErrorObject(err) {
     const errorObj = {
-        username: [],
-        password: []
+        username: '',
+        password: ''
     }
 
     if(err.message.includes('duplicate key error collection')){
-        errorObj.username.push('Username already taken');
+        errorObj.username = 'Username already taken';
     }
     if(err.message.includes('Username too short')){
-        errorObj.username.push('Username too short');
+        errorObj.username = 'Username too short';
     }
     if(err.message.includes('Username Required')){
-        errorObj.username.push('Username Required');
+        errorObj.username = 'Username Required';
     }
 
     if(err.message.includes('Password too short')){
-        errorObj.password.push('Password too short');
+        errorObj.password = 'Password too short';
     }
     if(err.message.includes('Password Required')){
-        errorObj.password.push('Password Required');
+        errorObj.password = 'Password Required';
     }
 
     return errorObj;
@@ -53,7 +53,7 @@ async function handleSignupPost(req, res) {
             httpOnly: true,
             maxAge: maxAgeForJWTInSec * 1000
         })
-        res.status(201).json(user);
+        res.status(201).json({ user: user._id });
     }
     catch(e) {
         res.status(400).json( generateErrorObject(e) );
