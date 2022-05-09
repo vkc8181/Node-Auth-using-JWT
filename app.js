@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 
 
@@ -15,6 +16,7 @@ mongoose.connect(dbUrl).then((r)=>{console.log("DB Connected")}).catch((err)=>{c
 
 
 app.use(express.json());    //To parse the body of incoming req
+app.use(cookieParser());
 app.use(require('./routes/auth.route'));
 
 

@@ -1,4 +1,8 @@
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user.model');
+
+const maxAgeForJWTInSec = 3* 24 * 60 * 60;  //Equivalent to 3 days
 
 function generateErrorObject(err) {
     const errorObj = {
@@ -27,6 +31,13 @@ function generateErrorObject(err) {
 
 }
 
+function createToken(id) {
+    return jwt.sign({ id }, process.env.JWT_SIGN_KEY, {
+        expiresIn: maxAgeForJWTInSec        
+        //This means the validation can be done by this particular token for this much time only
+    });
+}
+
 function handleSignupGet(req, res) {
     res.render('signup.ejs');
 }
@@ -37,6 +48,11 @@ async function handleSignupPost(req, res) {
 
     try{
         const user = await User.create({username, password});
+        const token = createToken(user._id);
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: maxAgeForJWTInSec * 1000
+        })
         res.status(201).json(user);
     }
     catch(e) {
