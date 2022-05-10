@@ -62,7 +62,7 @@ async function handleSignupPost(req, res) {
         res.cookie('jwt', token, {
             httpOnly: true,
             maxAge: maxAgeForJWTInSec * 1000
-        })
+        });
         res.status(201).json({ user: user._id });
     }
     catch(e) {
@@ -81,6 +81,11 @@ async function handleLoginPost(req, res) {
     const {username, password } = req.body;
     try{
         const user = await User.login(username, password);
+        const token = createToken(user._id);
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: maxAgeForJWTInSec * 1000
+        });
         res.status(200).json({ user:user._id });
     }
     catch(err) {
