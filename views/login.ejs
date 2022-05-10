@@ -5,25 +5,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        *{
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #f7f7f7;
+        }
+        h1{
+            text-align: center;
+        }
+        form{
+            width: 350px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 5px 5px 10px #ccc;
+            background-color: white;
+        }
+        form  input{
+            width: 100%;
+        }
+        form  div{
+            margin-bottom: 20px;
+        }
+        form div p {
+            color: rgb(209, 28, 70);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <h1>Login </h1>
     <form>
-        <input type="text" name="username" placeholder="username" required>
-        <input type="password" name="password" placeholder="password" required>
-        <button>Login</button>
+        <div class="username">
+            <label for="username">Username</label>
+            <input type="text" name="username" required>
+            <p id="username_error"></p>
+        </div>
+        <div class="password">
+            <label for="password">Password</label>
+            <input type="password" name="password"  required>
+            <p id="password_error"></p>
+        </div>
+        <div class="submit">
+            <button>Login</button>
+        </div>
     </form>
 
     <script>
         
         document.querySelector('form').onsubmit = async (event) => {
+
             event.preventDefault();
+
+            const unameError = document.querySelector('#username_error');
+            const passError = document.querySelector('#password_error');
+
+            unameError.textContent = '';
+            passError.textContent = '';
+
             const packet = {
                 username: document.querySelector('input[name="username"]').value,
                 password: document.querySelector('input[name="password"]').value
             }
 
-            let res = await fetch(document.URL,{
+            try{
+                const res = await fetch(document.URL,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,13 +80,24 @@
                 body: JSON.stringify(packet)
             });
 
-            let text = await res.text();
+            const data = await res.json();
 
-            alert(text);
+            if(res.status === 400) {
+                unameError.textContent = data.username;
+                passError.textContent = data.password;
+            }
 
-            document.querySelector('input[name="username"]').value = '';
-            document.querySelector('input[name="password"]').value = '';
+            else if(res.status === 200) {
+                // location.assign('/dashboard');
+                alert('Login successful');
+            }
 
+            
+            }
+            catch(e) {
+                console.log('Something went wrong');
+            }
+            
             
         };
         

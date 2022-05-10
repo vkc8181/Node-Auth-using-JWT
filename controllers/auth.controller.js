@@ -10,6 +10,7 @@ function generateErrorObject(err) {
         password: ''
     }
 
+    //Errors from signup
     if(err.message.includes('duplicate key error collection')){
         errorObj.username = 'Username already taken';
     }
@@ -25,6 +26,15 @@ function generateErrorObject(err) {
     }
     if(err.message.includes('Password Required')){
         errorObj.password = 'Password Required';
+    }
+
+
+    //Errors from Login
+    if(err.message.includes('Incorrect username')) {
+        errorObj.username = 'Incorrect username';
+    }
+    if(err.message.includes('Incorrect password')) {
+        errorObj.password = 'Incorrect password';
     }
 
     return errorObj;
@@ -67,9 +77,16 @@ function handleLoginGet(req, res) {
     res.render('login.ejs');
 }
 
-function handleLoginPost(req, res) {
-    console.log(req.body);
-    res.send('login successful');
+async function handleLoginPost(req, res) {
+    const {username, password } = req.body;
+    try{
+        const user = await User.login(username, password);
+        res.status(200).json({ user:user._id });
+    }
+    catch(err) {
+        const errorObj = generateErrorObject(err);
+        res.status(400).json(errorObj);
+    }
 }
 
 module.exports = {
