@@ -4,6 +4,8 @@ const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
+const authMiddleware = require('./middlewares/auth.middleware');
+
 
 
 const port = process.env.PORT || 3000;
@@ -23,6 +25,10 @@ app.use(require('./routes/auth.route'));
 
 app.get('/',(req, res) => {
     res.send('vkccc');
+});
+
+app.get('/dashboard', authMiddleware.reqAuth, (req, res) => {
+    res.send('<h1>Welcome to dashboard</h1>');
 });
 
 
