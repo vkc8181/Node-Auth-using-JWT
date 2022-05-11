@@ -94,9 +94,17 @@ async function handleLoginPost(req, res) {
     }
 }
 
+function handleLogout(req, res) {
+    res.cookie('jwt','',{
+        maxAge: 1
+    });
+    res.status(200).send('Logged out');
+}
+
 module.exports = {
     handleSignupGet,
     handleSignupPost,
     handleLoginGet,
-    handleLoginPost
+    handleLoginPost,
+    handleLogout
 } 

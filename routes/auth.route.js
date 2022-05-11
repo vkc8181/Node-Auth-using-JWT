@@ -9,6 +9,8 @@ router.post('/signup', authController.handleSignupPost);
 router.get('/login', authController.handleLoginGet);
 router.post('/login', authController.handleLoginPost);
 
+router.get('/logout', authController.handleLogout);
+
 
 module.exports = router;
 
