@@ -28,7 +28,7 @@ app.get('/',(req, res) => {
 });
 
 app.get('/dashboard', authMiddleware.reqAuth, (req, res) => {
-    res.send('<h1>Welcome to dashboard</h1>');
+    res.send(`<h1>Hello ${res.locals.username}, welcome to dashboard</h1>`);
 });
 
 
